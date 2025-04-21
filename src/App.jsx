@@ -1,46 +1,49 @@
-import React from "react";
-import Navbar from "./components/Navbar/Navbar";
-import Hero from "./components/Hero/Hero";
-import Products from "./components/Products/Products";
-import AOS from "aos";
-import "aos/dist/aos.css";
-import TopProducts from "./components/TopProducts/TopProducts";
-import Banner from "./components/Banner/Banner";
-import Subscribe from "./components/Subscribe/Subscribe";
-import Testimonials from "./components/Testimonials/Testimonials";
-import Footer from "./components/Footer/Footer";
-import Popup from "./components/Popup/Popup";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/home"
+import { createContext } from "react";
+import ProductDetail from "./pages/productdetail";
+import { CartProvider } from "./context/cartcontext";
+import CartPage from "./pages/cart";
+import { OrdersProvider } from './context/ordercontext'
+import { useState } from "react";
+import { womens } from "./constants/women-tops";
+import { womenShorts } from "./constants/women-shorts";
+import SearchResults from "./pages/serachresults";
+export const AppContext =createContext();
 
-const App = () => {
-  const [orderPopup, setOrderPopup] = React.useState(false);
+ function  App() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
-  const handleOrderPopup = () => {
-    setOrderPopup(!orderPopup);
+  const allProducts = [...womens, ...womenShorts];
+
+  const handleSearch = (term) => {
+    const lower = term.toLowerCase();
+    const results = allProducts.filter((p) =>
+      p.name.toLowerCase().includes(lower) ||
+      p.description.toLowerCase().includes(lower) ||
+      p.categories?.some((cat) => cat.toLowerCase().includes(lower))
+    );
+    setSearchTerm(term);
+    setSearchResults(results);
   };
-  React.useEffect(() => {
-    AOS.init({
-      offset: 100,
-      duration: 800,
-      easing: "ease-in-sine",
-      delay: 100,
-    });
-    AOS.refresh();
-  }, []);
 
   return (
-    <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
-      <Navbar handleOrderPopup={handleOrderPopup} />
-      <Hero handleOrderPopup={handleOrderPopup} />
-      <Products />
-      <TopProducts handleOrderPopup={handleOrderPopup} />
-      <Banner />
-      <Subscribe />
-      <Products />
-      <Testimonials />
-      <Footer />
-      <Popup orderPopup={orderPopup} setOrderPopup={setOrderPopup} />
-    </div>
+    <AppContext.Provider value={{ searchTerm, searchResults, handleSearch }}>
+      <CartProvider>
+        <OrdersProvider>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/search" element={<SearchResults />} />
+            </Routes>
+        </OrdersProvider>
+      </CartProvider>
+    </AppContext.Provider>
   );
-};
+}
 
 export default App;
+
+

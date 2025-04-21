@@ -5,29 +5,28 @@ import Image3 from "../../assets/hero/sale.png";
 import Slider from "react-slick";
 
 const ImageList = [
-  {
-    id: 1,
-    img: Image1,
-    title: "Upto 50% off on all Men's Wear",
-    description:
-      "lorem His Life will forever be Changed dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    id: 2,
-    img: Image2,
-    title: "30% off on all Women's Wear",
-    description:
-      "Who's there lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    id: 3,
-    img: Image3,
-    title: "70% off on all Products Sale",
-    description:
-      "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-];
-
+    {
+      id: 1,
+      img: Image1,
+      title: "Upto 30% off on all New Arrivals",
+      description:
+        "Revamp your style with top-quality outfits. Shop the latest trends in men’s fashion — durable, affordable, and delivered fast.",
+    },
+    {
+      id: 2,
+      img: Image2,
+      title: "30% off on all Women's Top Wear",
+      description:
+        "Unleash your inner style icon. Discover bold, beautiful, and comfortable fashion crafted for modern women.",
+    },
+    {
+      id: 3,
+      img: Image3,
+      title: "50% off on all Products Sale",
+      description:
+        "Massive clearance event! Grab your favorites at unbeatable prices while stocks last — hurry, limited time only.",
+    },
+  ];
 const Hero = ({ handleOrderPopup }) => {
   var settings = {
     dots: false,
@@ -43,7 +42,7 @@ const Hero = ({ handleOrderPopup }) => {
   };
 
   return (
-    <div className="relative overflow-hidden min-h-[550px] sm:min-h-[650px] bg-gray-100 flex justify-center items-center dark:bg-gray-950 dark:text-white duration-200 ">
+    <div className=" bg-background text-foreground  relative overflow-hidden min-h-[550px] sm:min-h-[650px]  flex justify-center items-center dark:text-white duration-200 ">
       {/* background pattern */}
       <div className="h-[700px] w-[700px] bg-primary/40 absolute -top-1/2 right-0 rounded-3xl rotate-45 -z[8]"></div>
       {/* hero section */}

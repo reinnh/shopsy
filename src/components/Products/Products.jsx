@@ -1,4 +1,3 @@
-import React from "react";
 import Img1 from "../../assets/women/women.png";
 import Img2 from "../../assets/women/women2.jpg";
 import Img3 from "../../assets/women/women3.jpg";
@@ -74,12 +73,12 @@ const Products = () => {
                 data-aos="fade-up"
                 data-aos-delay={data.aosDelay}
                 key={data.id}
-                className="space-y-3"
+                className="space-y-3 w-full border"v 
               >
                 <img
                   src={data.img}
                   alt=""
-                  className="h-[220px] w-[150px] object-cover rounded-md"
+                  className="h-[280px] w-full cursor-pointer object-cover rounded-md"
                 />
                 <div>
                   <h3 className="font-semibold">{data.title}</h3>

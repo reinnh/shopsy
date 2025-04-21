@@ -1,137 +1,98 @@
-import React from "react";
+// ... all your imports remain the same
+
+import { useState, useRef,useEffect } from "react";
+import { FaShoppingCart } from "react-icons/fa";
 import Logo from "../../assets/logo.png";
-import { IoMdSearch } from "react-icons/io";
-import { FaCartShopping } from "react-icons/fa6";
-import { FaCaretDown } from "react-icons/fa";
-import DarkMode from "./DarkMode";
+import LightButton from "../../assets/website/light-mode-button.png";
+import DarkButton from "../../assets/website/dark-mode-button.png";
+import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "@/App";
 
-const Menu = [
-  {
-    id: 1,
-    name: "Home",
-    link: "/#",
-  },
-  {
-    id: 2,
-    name: "Top Rated",
-    link: "/#services",
-  },
-  {
-    id: 3,
-    name: "Kids Wear",
-    link: "/#",
-  },
-  {
-    id: 3,
-    name: "Mens Wear",
-    link: "/#",
-  },
-  {
-    id: 3,
-    name: "Electronics",
-    link: "/#",
-  },
-];
 
-const DropdownLinks = [
-  {
-    id: 1,
-    name: "Trending Products",
-    link: "/#",
-  },
-  {
-    id: 2,
-    name: "Best Selling",
-    link: "/#",
-  },
-  {
-    id: 3,
-    name: "Top Rated",
-    link: "/#",
-  },
-];
 
-const Navbar = ({ handleOrderPopup }) => {
+const Navbar = () => {
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+  const { handleSearch } = useContext(AppContext);
+  const [theme, setTheme] = useState("light");
+
+  const onSearch = (e) => {
+    e.preventDefault();
+    handleSearch(query);
+    navigate("/search");
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme") || "light";
+    setTheme(saved);
+    document.documentElement.classList.toggle("dark", saved === "dark");
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
   return (
-    <div className="shadow-md bg-white dark:bg-gray-900 dark:text-white duration-200 relative z-40">
-      {/* upper Navbar */}
-      <div className="bg-primary/40 py-2">
-        <div className="container flex justify-between items-center">
-          <div>
-            <a href="#" className="font-bold text-2xl sm:text-3xl flex gap-2">
-              <img src={Logo} alt="Logo" className="w-10" />
-              Shopsy
-            </a>
-          </div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background text-foreground shadow-sm border-b border-border">
+      <div className="container flex items-center justify-between h-16">
+        {/* Logo & Store name */}
+        <div className="flex items-center gap-2 font-bold text md:text-2xl">
+          <img src={Logo} alt="Logo" className="w-10 " />
+        </div>
 
-          {/* search bar */}
-          <div className="flex justify-between items-center gap-4">
-            <div className="relative group hidden sm:block">
-              <input
-                type="text"
-                placeholder="search"
-                className="w-[200px] sm:w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800  "
-              />
-              <IoMdSearch className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" />
-            </div>
-
-            {/* order button */}
-            <button
-              onClick={() => handleOrderPopup()}
-              className="bg-gradient-to-r from-primary to-secondary transition-all duration-200 text-white  py-1 px-4 rounded-full flex items-center gap-3 group"
+        {/* Right-side (Search + Cart + Theme) */}
+        <div className="flex items-center gap-4">
+          {/* Search Bar (always visible, responsive sizing) */}
+          <form onSubmit={onSearch} className="relative">
+            <Input
+              type="text"
+              placeholder="Search products..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="bg-gray-300 text-black w-[120px] sm:w-[160px] md:w-[240px] lg:w-[320px] transition-all md:h-10 px-4 text-sm"
+            />
+            <Button
+              type="submit"
+              size="icon"
+              variant="ghost"
+              className="absolute right-1 top-1 text-muted-foreground"
             >
-              <span className="group-hover:block hidden transition-all duration-200">
-                Order
-              </span>
-              <FaCartShopping className="text-xl text-white drop-shadow-sm cursor-pointer" />
-            </button>
+            </Button>
+          </form>
 
-            {/* Darkmode Switch */}
-            <div>
-              <DarkMode />
-            </div>
+          {/* Cart */}
+          <Link
+            to={"/cart"}
+            className="relative text-xl p-2 rounded-full bg-primary text-white hover:opacity-90 transition"
+          >
+            <FaShoppingCart className="text-orange-400" />
+          </Link>
+
+          {/* Dark Mode Toggle */}
+          <div className="relative w-12 h-12">
+            <img
+              src={LightButton}
+              alt="Light Mode"
+              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              className={`absolute w-12 h-12 top-0 right-0 cursor-pointer transition-opacity duration-300 ${theme === "dark" ? "opacity-0" : "opacity-100"
+                }`}
+            />
+            <img
+              src={theme === "light" ? DarkButton : LightButton}
+              alt="Dark Mode"
+              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              className="absolute w-12 h-12 top-0 right-0 cursor-pointer transition-opacity duration-300"
+            />
           </div>
         </div>
       </div>
-      {/* lower Navbar */}
-      <div data-aos="zoom-in" className="flex justify-center">
-        <ul className="sm:flex hidden items-center gap-4">
-          {Menu.map((data) => (
-            <li key={data.id}>
-              <a
-                href={data.link}
-                className="inline-block px-4 hover:text-primary duration-200"
-              >
-                {data.name}
-              </a>
-            </li>
-          ))}
-          {/* Simple Dropdown and Links */}
-          <li className="group relative cursor-pointer">
-            <a href="#" className="flex items-center gap-[2px] py-2">
-              Trending Products
-              <span>
-                <FaCaretDown className="transition-all duration-200 group-hover:rotate-180" />
-              </span>
-            </a>
-            <div className="absolute z-[9999] hidden group-hover:block w-[200px] rounded-md bg-white p-2 text-black shadow-md">
-              <ul>
-                {DropdownLinks.map((data) => (
-                  <li key={data.id}>
-                    <a
-                      href={data.link}
-                      className="inline-block w-full rounded-md p-2 hover:bg-primary/20 "
-                    >
-                      {data.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    </nav>
   );
 };
 
